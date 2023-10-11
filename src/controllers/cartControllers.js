@@ -23,6 +23,7 @@ class CartController {
       const cart = await this.cartService.getCart(req.params.cid);
       res.send({ products: cart.products });
     } catch (error) {
+      console.log("hola en cart controller");
       res.status(400).send({
         status: "error",
         message: error.message,
@@ -110,18 +111,37 @@ class CartController {
         (total, product) => total + product.price * product.quantity,
         0
       );
-
+      console.log("totalAmount:", totalAmount);
       const ticketData = {
         code: 10,
         amount: totalAmount,
         purchaser: req.user.id,
       };
 
-      // Asumiendo que ticketController está definido y tiene un método createTicket
       await ticketController.createTicket({ body: ticketData, ...req }, res);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error al crear el ticket de compra" });
+    }
+  }
+
+  async getPurchase(req, res) {
+    try {
+      const cid = req.params.cid;
+      const purchase = await this.cartService.getCart(cid);
+
+      if (purchase) {
+        res.json({ status: "success", data: purchase });
+      } else {
+        res
+          .status(404)
+          .json({ status: "error", message: "Compra no encontrada" });
+      }
+    } catch (error) {
+      console.error(error);
+      res
+        .status(500)
+        .json({ status: "error", message: "Error interno del servidor" });
     }
   }
 }

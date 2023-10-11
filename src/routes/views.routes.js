@@ -1,6 +1,7 @@
 import express from "express";
 import ProductManager from "../dao/ProductManager.js";
 import CartManager from "../dao/cartManager.js";
+import cartControllers from "../controllers/cartControllers.js";
 
 const checkSession = (req, res, next) => {
   if (req.session && req.session.user) {
@@ -60,6 +61,11 @@ router.get("/carts/:cid", async (req, res) => {
       message: "Error! No se encuentra el ID de Carrito!",
     });
   }
+});
+
+router.get("/carts/:cid/purchase", async (req, res) => {
+  const cid = req.params.cid;
+  cartControllers.getPurchase(req, res, cid);
 });
 
 router.get("/realtimeproducts", (req, res) => {

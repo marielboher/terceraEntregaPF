@@ -1,28 +1,28 @@
 const crearCarrito = async () => {
-    try {
-        if (localStorage.getItem("carrito")) {
-            return JSON.parse(localStorage.getItem("carrito"));
-        } else {
-            const response = await fetch("/api/carts/", {
-                method: "POST",
-                headers: { "Content-type": "application/json; charset=UTF-8" }
-            });
-            const data = await response.json();
-            console.log('Data del carrito:', data);
-            localStorage.setItem("carrito", JSON.stringify({ id: data.id }));
-            return { id: data.id };
-        }
-    } catch (error) {
-        console.log("Error en Crear el Carrito! " + error);
+  try {
+    if (localStorage.getItem("carrito")) {
+      return JSON.parse(localStorage.getItem("carrito"));
+    } else {
+      const response = await fetch("/api/carts/", {
+        method: "POST",
+        headers: { "Content-type": "application/json; charset=UTF-8" },
+      });
+      const data = await response.json();
+      console.log("Data del carrito:", data);
+      localStorage.setItem("carrito", JSON.stringify({ id: data.id }));
+      return { id: data.id };
     }
-}
+  } catch (error) {
+    console.log("Error en Crear el Carrito! " + error);
+  }
+};
 
 const obtenerIdCarrito = async () => {
   try {
     let cart = await crearCarrito();
     console.log("Carrito obtenido:", cart);
     if (!cart.id) {
-        console.error('El ID del carrito es undefined');
+      console.error("El ID del carrito es undefined");
     }
     return cart.id;
   } catch (error) {
@@ -35,9 +35,9 @@ const agregarProductoAlCarrito = async (pid) => {
     let cid = await obtenerIdCarrito();
     console.log("Verificando IDs:", cid, pid);
 
-    if(!cid) {
-        console.error('El CID es undefined.');
-        return;
+    if (!cid) {
+      console.error("El CID es undefined.");
+      return;
     }
     console.log("Verificando IDs:", cid, pid);
     const response = await fetch("/api/carts/" + cid + "/products/" + pid, {
@@ -45,7 +45,7 @@ const agregarProductoAlCarrito = async (pid) => {
       headers: { "Content-type": "application/json; charset=UTF-8" },
     });
 
-    const data = await response.json(); 
+    const data = await response.json();
 
     if (response.ok) {
       console.log("Se agregó al Carrito!", data);
@@ -54,9 +54,37 @@ const agregarProductoAlCarrito = async (pid) => {
         "Error en agregar el Producto al Carrito! Status:",
         response.status,
         data
-      ); 
+      );
     }
   } catch (error) {
     console.log("Error en agregar el Producto al Carrito! " + error);
   }
 };
+
+async function realizarCompra() {
+  try {
+    const cartId = await obtenerIdCarrito();
+    console.log("Cart ID:", cartId);
+    if (!cartId) {
+      throw new Error("Carrito no encontrado");
+    }
+
+    const response = await fetch(`/carts/${cartId}/purchase`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("response", response);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Algo salió mal");
+    }
+
+    const data = await response.json();
+    console.log("Compra realizada con éxito", data);
+  } catch (error) {
+    console.error("Error al realizar la compra", error);
+  }
+}
