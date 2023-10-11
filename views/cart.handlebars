@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/src/public/css/products.css">
+    <title>Document</title>
+    <script>
+        async function realizarCompra() {
+            try {
+                const response = await fetch('/ruta/de/la/compra', {
+                    method: 'POST',
+                    credentials: 'include', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({/* datos que necesites enviar */})
+                });
+
+               if (!response.ok) {
+    const errorData = await response.json(); 
+    throw new Error(errorData.error || 'Algo salió mal'); /
+}
+                const data = await response.json();
+
+                if (data.error) {
+                    console.error(data.error);
+                    // Manejar error
+                } else {
+                    console.log('Compra realizada con éxito', data);
+                    // Manejar éxito
+                }
+            } catch (error) {
+                console.error('Error al realizar la compra', error);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container-carts">
+        <h1>Carrito</h1>
+        <div class="product-cart">
+            <ul>
+                {{#each products}}
+                <li>
+                    {{this.product.title}} - ${{this.product.price}} - Cantidad: {{this.quantity}}
+                </li>
+                {{/each}}
+            </ul>
+            <button onclick="realizarCompra()">Realizar Compra</button>
+        </div>
+    </div>
+</body>
+</html>
