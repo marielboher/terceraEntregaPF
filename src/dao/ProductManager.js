@@ -48,19 +48,21 @@ class ProductManager {
 
   async deleteProduct(id) {
     try {
-      const deletedProduct = await productModel.findByIdAndDelete(id);
-      if (deletedProduct) {
-        console.log("Product #" + id + " deleted!");
-        return true;
-      } else {
-        console.log("Product not found!");
-        return false;
-      }
+        const deletedProduct = await productModel.findByIdAndDelete(id);
+        if (deletedProduct) {
+            console.log('Producto eliminado correctamente:', deletedProduct);
+            return true;
+        } else {
+            console.log('Producto no encontrado:', id);
+            return false;
+        }
     } catch (error) {
-      console.error("Error deleting product:", error);
-      return false;
+        console.error('Error eliminando producto:', error);
+        return false;
     }
-  }
+}
+
+
 
   async getProducts(params = {}) {
     let { limit = 10, page = 1, query = {}, sort = {} } = params;

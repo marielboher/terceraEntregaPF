@@ -15,10 +15,17 @@ const loginUser = async () => {
 
     const data = await response.json();
     if (data.status === "success") {
+      console.log("Data received: ", data);
+      console.log("Redirigiendo a:", data.redirect);
       window.location.href = data.redirect;
+    } else {
+      console.log("Error durante el inicio de sesión:", data);
     }
   } catch (error) {
-    console.log("Hubo un problema con la operación, usuario o contraseña incorrectos", error);
+    console.log(
+      "Hubo un problema con la operación, usuario o contraseña incorrectos",
+      error
+    );
   }
 };
 document.getElementById("btnLogIn").onclick = loginUser;

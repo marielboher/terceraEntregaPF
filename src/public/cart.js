@@ -98,4 +98,6 @@ async function realizarCompra() {
   } catch (error) {
     console.error("Error al realizar la compra", error);
   }
+
+  
 }

@@ -4,14 +4,16 @@ import CartManager from "../dao/cartManager.js";
 import cartControllers from "../controllers/cartControllers.js";
 
 const checkSession = (req, res, next) => {
+  console.log('Checking session:', req.session);
+
   if (req.session && req.session.user) {
-    console.log("session en Checksession", req.session)
+    console.log('Session exists:', req.session.user);
     next();
   } else {
+    console.log('No session found, redirecting to /login');
     res.redirect("/login");
   }
 };
-
 const checkAlreadyLoggedIn = (req, res, next) => {
   if (req.session && req.session.user) {
     console.log("Usuario ya autenticado, redirigiendo a /profile");
@@ -85,7 +87,11 @@ router.get("/register", checkAlreadyLoggedIn, (req, res) => {
 });
 
 router.get("/profile", checkSession, (req, res) => {
+  console.log('Inside /profile route');
+
   const userData = req.session.user;
+  console.log('User data:', userData);
+
   res.render("profile", { user: userData });
 });
 

@@ -51,11 +51,9 @@ app.use(
   session({
     secret: process.env.SECRET_KEY_SESSION,
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: { 
       secure: false,  
-      httpOnly: false, 
-      sameSite: "none" 
     },
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URL,
@@ -91,7 +89,8 @@ socketServer.on("connection", async (socket) => {
   console.log("Un cliente se ha conectado");
 
   const allProducts = await PM.getProducts();
-  socket.emit("initial_products", allProducts);
+socket.emit("initial_products", allProducts.payload);
+
 
   const previousMessages = await messageModel.find().sort({ timestamp: 1 });
   socket.emit("previous messages", previousMessages);
