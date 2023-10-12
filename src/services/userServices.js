@@ -8,11 +8,6 @@ class UserService {
 
   async registerUser({ first_name, last_name, email, age, password, role }) {
     try {
-      const role =
-        email == process.env.ADMIN_EMAIL &&
-        password === process.env.ADMIN_PASSWORD
-          ? "admin"
-          : "user";
       const user = await this.userManager.addUser({
         first_name,
         last_name,
@@ -23,7 +18,7 @@ class UserService {
       });
 
       if (user) {
-        return { status: "success", user, redirect: "/login" };
+        return { status: "success", user, redirect: "/login" }; 
       } else {
         return { status: "error", message: "User already exists" };
       }

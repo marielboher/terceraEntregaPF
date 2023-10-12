@@ -1,8 +1,10 @@
 import { userModel } from "../models/user.models.js";
 import { createHash, isValidPassword } from "../../utils.js";
+import UserDTO from "./dto/user.dto.js";
+
 
 class UserManager {
-  async addUser({ first_name, last_name, email, age, password, role }) { 
+  async addUser({ first_name, last_name, email, age, password, role }) {
     try {
       const existingUser = await userModel.findOne({ email });
   
@@ -22,7 +24,7 @@ class UserManager {
       });
   
       console.log("User added!", user);
-      return user;
+      return new UserDTO(user); 
     } catch (error) {
       console.error("Error adding user:", error);
       throw error;
@@ -33,14 +35,11 @@ class UserManager {
       const userLogged = await userModel.findOne({ email: user });
 
       if (userLogged && isValidPassword(userLogged, pass)) {
-        const role =
-          userLogged.email === "adminCoder@coder.com" ? "admin" : "usuario";
-
-        return userLogged;
-      }
+        return new UserDTO(userLogged); 
+    }
       return null;
     } catch (error) {
-      console.error("Error durante el login:", error);
+      console.error("Error during login:", error);
       throw error;
     }
   }
