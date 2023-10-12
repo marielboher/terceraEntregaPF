@@ -20,7 +20,10 @@ cartsRouter.delete("/:cid/products/:pid", cartControllers.deleteProductFromCart.
 
 cartsRouter.delete("/:cid", cartControllers.deleteProductsFromCart.bind(cartControllers));
 
-cartsRouter.post("/:cid/purchase", passportCall("jwt"), cartControllers.createPurchaseTicket.bind(cartControllers));
+cartsRouter.post("/:cid/purchase", (req, res, next) => {
+    console.log('Ruta de compra accedida');
+    next();
+  }, passportCall("jwt"), cartControllers.createPurchaseTicket.bind(cartControllers));
 
 
 export default cartsRouter;

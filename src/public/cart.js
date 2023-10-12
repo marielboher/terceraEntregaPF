@@ -69,21 +69,32 @@ async function realizarCompra() {
       throw new Error("Carrito no encontrado");
     }
 
-    const response = await fetch(`/carts/${cartId}/purchase`, {
+    const url = `/api/carts/${cartId}/purchase`; // URL corregida
+    console.log("URL de compra:", url); // Log de la URL para verificar
+
+    const response = await fetch(url, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log("response", response);
+    console.log("response:", response);
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Algo salió mal");
+      console.error("Error en la respuesta", response.statusText);
+      const text = await response.text();
+      console.error(text);
+      return;
     }
 
-    const data = await response.json();
-    console.log("Compra realizada con éxito", data);
+    // Asegurarse de que la respuesta es JSON antes de tratar de parsearla
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.indexOf("application/json") !== -1) {
+      const data = await response.json();
+      console.log("Compra realizada con éxito", data); // Esto debería mostrarte los datos del ticket.
+    } else {
+      console.error("Respuesta no JSON:", await response.text());
+    }
   } catch (error) {
     console.error("Error al realizar la compra", error);
   }

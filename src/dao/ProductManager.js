@@ -132,6 +132,19 @@ class ProductManager {
       return false;
     }
   }
+
+  async updateProduct(pid, updateData) {
+    try {
+      const updatedProduct = await productModel.findByIdAndUpdate(pid, updateData, {
+        new: true,
+      });
+      return updatedProduct ? true : false;
+    } catch (error) {
+      console.error("Error updating product:", error);
+      return false;
+    }
+  }
+  
 }
 
 export default ProductManager;

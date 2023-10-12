@@ -41,6 +41,7 @@ app.use(express.static(__dirname));
 app.use(
   cors({
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"], 
   })
 );
 
@@ -51,10 +52,14 @@ app.use(
     secret: process.env.SECRET_KEY_SESSION,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false },
+    cookie: { 
+      secure: false,  
+      httpOnly: false, 
+      sameSite: "none" 
+    },
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URL,
-      collectionName: "sessions",
+      collectionName: "sessions"
     }),
   })
 );

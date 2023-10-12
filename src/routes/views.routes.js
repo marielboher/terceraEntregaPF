@@ -63,7 +63,7 @@ router.get("/carts/:cid", async (req, res) => {
   }
 });
 
-router.get("/carts/:cid/purchase", async (req, res) => {
+router.post("/carts/:cid/purchase", async (req, res) => {
   const cid = req.params.cid;
   cartControllers.getPurchase(req, res, cid);
 });

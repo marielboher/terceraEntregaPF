@@ -8,26 +8,29 @@ export const createHash = (password) =>
 export const isValidPassword = (user, password) =>
   bcrypt.compareSync(password, user.password);
 
-export const passportCall = (strategy) => {
-  return async (req, res, next) => {
-    console.log(req.cookies);
-    passport.authenticate(strategy, function (error, user, info) {
-      console.log('Authenticated user:', req.user);
-      if (error) return error;
-
-
-      if (!user) {
-        console.log('No user found', info); 
-        return res
-          .status(401)
-          .send({ error: info.messages ? info.messages : info.toString() });
-      }
-
-      req.user = user;
-      next();
-    })(req, res, next);
+  export const passportCall = (strategy) => {
+    return async (req, res, next) => {
+      console.log('Inicio de la autenticación');
+      
+      passport.authenticate(strategy, function (error, user, info) {
+        console.log('Autenticación en proceso');
+        
+        if (error) {
+          console.error('Error durante la autenticación', error);
+          return next(error);
+        }
+  
+        if (!user) {
+          console.log('Autenticación fallida');
+          return res.status(401).send({ error: info.messages ? info.messages : info.toString() });
+        }
+  
+        req.user = user;
+        console.log('Autenticación exitosa');
+        next();
+      })(req, res, next);
+    };
   };
-};
 
 export const authorization = (roles) => {
   return async (req, res, next) => {
