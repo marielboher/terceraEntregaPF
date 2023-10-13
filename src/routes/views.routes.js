@@ -30,12 +30,13 @@ const CM = new CartManager();
 
 router.get("/", checkSession, async (req, res) => {
   const products = await PM.getProducts(req.query);
-  res.render("home", { products });
+  res.render("home", { products});
 });
 
 router.get("/products", checkSession, async (req, res) => {
   const products = await PM.getProducts(req.query);
   const user = req.session.user;
+  
   console.log(user);
   res.render("products", { products, user });
 });

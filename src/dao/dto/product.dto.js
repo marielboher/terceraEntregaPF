@@ -7,3 +7,5 @@ class ProductDTO {
         
     }
 }
+
+export default ProductDTO;

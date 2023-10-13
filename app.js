@@ -17,7 +17,9 @@ import passport from "passport";
 import initializePassport from "./src/config/passport.config.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { MONGO_URL, SECRET_KEY_SESSION, PORT } from "./src/config/config.js";
+import DBManager from './src/mongo/ds.js';
+import { SECRET_KEY_SESSION, PORT } from "./src/config/config.js";
+import emailRouter from "./src/routes/email.routes.js";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -56,7 +58,7 @@ app.use(
       secure: false,  
     },
     store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URL,
+      mongoUrl: process.env.MONGODB_CNX_STR,
       collectionName: "sessions"
     }),
   })
@@ -72,18 +74,10 @@ app.use("/api/carts/", cartsRouter);
 app.use("/", viewsRouter);
 app.use("/api/sessions/", sessionsRouter);
 app.use("/", viewsRouter);
+app.use('/email', emailRouter);
+
 
 const PM = new ProductManager();
-
-mongoose.connect(process.env.MONGO_URL);
-
-mongoose.connection.on("connected", () => {
-  console.log("Conectado a MongoDB");
-});
-
-mongoose.connection.on("error", (err) => {
-  console.error("Error conectando a MongoDB:", err);
-});
 
 socketServer.on("connection", async (socket) => {
   console.log("Un cliente se ha conectado");

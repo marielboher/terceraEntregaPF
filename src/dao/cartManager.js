@@ -74,16 +74,16 @@ class CartManager {
           console.log("Push result:", pushResult);
         }
 
-        await this.productManager.updateProduct(pid, {
-          stock: product.stock - 1,
-        }); 
+        // await this.productManager.updateProduct(pid, {
+        //   stock: product.stock - 1,
+        // }); 
 
-        const updatedProduct = await this.productManager.getProductById(pid); 
+        // const updatedProduct = await this.productManager.getProductById(pid); 
 
-        console.log(
-          "Stock después de agregar al carrito:",
-          updatedProduct.stock
-        );
+        // console.log(
+        //   "Stock después de agregar al carrito:",
+        //   updatedProduct.stock
+        // );
 
         return {
           status: "ok",

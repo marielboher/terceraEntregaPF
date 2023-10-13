@@ -1,3 +1,4 @@
+import ProductManager from "../dao/ProductManager.js";
 import CartService from "../services/cartServices.js";
 import ticketController from "./ticketController.js";
 import { v4 as uuidv4 } from "uuid";
@@ -96,16 +97,34 @@ class CartController {
 
   async createPurchaseTicket(req, res) {
     console.log("Ruta /carts/:cid/purchase accedida");
-  
+
     try {
       console.log("req.user:", req.user);
       if (!req.user || !req.user.id) {
         console.error("req.user no está definido");
         return res.status(400).json({ error: "Usuario no definido" });
       }
-  
       const cart = await this.cartService.getCart(req.params.cid);
-  
+
+      const productManager = new ProductManager();
+
+      for (const item of cart.products) {
+        const product = await productManager.getProductById(item.product);
+
+        if (!product) {
+          return res
+            .status(404)
+            .json({ error: `Producto ${item.product} no encontrado` });
+        }
+
+        if (product.stock < item.quantity) {
+          return res.status(400).json({ error: "Stock insuficiente" });
+        }
+
+        const newStock = product.stock - item.quantity;
+        await productManager.updateProduct(item.product, { stock: newStock });
+      }
+
       if (!cart) {
         return res.status(404).json({ error: "Carrito no encontrado" });
       }
@@ -121,19 +140,19 @@ class CartController {
         );
         return total + product.product.price * product.quantity;
       }, 0);
-  
+
       console.log("Total Amount calculado:", totalAmount);
-  
+
       const ticketData = {
         code: uuidv4(),
         purchase_datetime: new Date(),
         amount: totalAmount,
         purchaser: req.user.id,
       };
-  
+
       console.log("Ticket Data justo antes de crear el ticket:", ticketData);
       const ticketCreated = await ticketController.createTicket(
-        { body: ticketData }, 
+        { body: ticketData },
         res
       );
       console.log("Ticket Creado:", ticketCreated);
