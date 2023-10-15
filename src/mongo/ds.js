@@ -3,9 +3,6 @@ import { PERSISTENCE, MONGODB_CNX_STR } from '../config/config.js';
 
 class DBManager {
   constructor() {
-    console.log('Inicializando DBManager');
-    console.log('MONGODB_CNX_STR:', MONGODB_CNX_STR);
-    console.log('PERCISTENCE:', PERSISTENCE);
     if (PERSISTENCE === 'MONGO') {
       this.connectToMongoDB();
     } else {
@@ -15,7 +12,6 @@ class DBManager {
 
   async connectToMongoDB() {
     try {
-      console.log('MongoDB Connection String:', MONGODB_CNX_STR);  
       await mongoose.connect(MONGODB_CNX_STR, {
         useNewUrlParser: true,
         useUnifiedTopology: true,

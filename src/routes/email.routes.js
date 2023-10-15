@@ -1,11 +1,10 @@
 import express from "express";
 import { Router } from "express";
-import EmailController from "../controllers/email.controller.js";
-
-const emailController = new EmailController();
+import {sendEmail, sendEmailWithAttachments} from '../controllers/email.controller.js';
 
 const emailRouter = Router();
 
-emailRouter.post("/send", emailController.sendEmail);
+emailRouter.get("/", sendEmail);
+emailRouter.get("/attachments", sendEmailWithAttachments);
 
 export default emailRouter;

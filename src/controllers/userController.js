@@ -1,5 +1,6 @@
 import UserService from "../services/userServices.js";
 import UserDTO from "../dao/dto/user.dto.js";
+import UserRespose from "../dao/dto/user.response.dto.js";
 
 class UserController {
   constructor() {
@@ -14,10 +15,12 @@ class UserController {
       email,
       age,
       password,
-      role
+      role,
     });
 
-    return res.status(response.status === "success" ? 200 : 400).json(response.user); 
+    return res
+      .status(response.status === "success" ? 200 : 400)
+      .json(response.user);
   }
 
   async restorePassword(req, res) {
@@ -47,13 +50,17 @@ class UserController {
   }
 
   currentUser(req, res) {
-    if (req.session.user) { 
-      return res.send({ status: "OK", payload: new UserDTO(req.session.user) });
+    if (req.session.user) {
+      return res.send({
+        status: "OK",
+        payload: new UserRespose(req.session.user),
+      });
     } else {
-      return res.status(401).send({ status: "Error", message: "No authorized" });
+      return res
+        .status(401)
+        .send({ status: "Error", message: "No authorized" });
     }
   }
 }
-
 
 export default UserController;

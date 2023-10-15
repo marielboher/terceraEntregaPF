@@ -356,6 +356,22 @@
   padding: 10px;
 }
 
+.product-cart{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+}
+
+.product-cart button{
+  border: none;
+  color: #FFF;
+  background-color: #7D5A5A;
+  height: 40px;
+  width: 150px;
+}
+
 .marco-imagen {
   border: 1px solid #886F6F;
   padding: 20px;

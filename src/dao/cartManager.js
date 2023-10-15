@@ -30,7 +30,7 @@ class CartManager {
     return await cartModel.find().lean();
   }
 
-  async addProductToCart(cid, pid) {
+  async addProductToCart(cid, pid, quantity) {
     try {
       console.log(`Adding product ${pid} to cart ${cid}`);
 
@@ -50,14 +50,9 @@ class CartManager {
           };
         }
 
-        if (product.stock < 1) {
-          // Verifica la disponibilidad de stock
-          console.log("Insufficient stock!");
-          return {
-            status: "error",
-            message: "Stock insuficiente!",
-          };
-        }
+        if (product.stock < quantity) { 
+          return { status: "error", message: "Stock insuficiente!" };
+      }
 
         const updateResult = await cartModel.updateOne(
           { _id: cid, "products.product": pid },
@@ -73,17 +68,6 @@ class CartManager {
 
           console.log("Push result:", pushResult);
         }
-
-        // await this.productManager.updateProduct(pid, {
-        //   stock: product.stock - 1,
-        // }); 
-
-        // const updatedProduct = await this.productManager.getProductById(pid); 
-
-        // console.log(
-        //   "Stock después de agregar al carrito:",
-        //   updatedProduct.stock
-        // );
 
         return {
           status: "ok",
