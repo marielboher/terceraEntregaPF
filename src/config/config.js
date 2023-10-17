@@ -13,3 +13,6 @@ export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 export const PERSISTENCE = process.env.PERSISTENCE;
 export const EMAIL_USER = process.env.EMAIL_USER;
 export const EMAIL_PASS = process.env.EMAIL_PASS;
+export const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+export const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+export const TWILIO_SMS_NUMBER = process.env.TWILIO_SMS_NUMBER;

@@ -381,3 +381,9 @@
   height: 40vh;
   width: 28vh;
 }
+
+#cartButton{
+  border: none;
+  background-color: transparent;
+  color: #7D5A5A;
+}

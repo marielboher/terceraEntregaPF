@@ -156,8 +156,6 @@ class CartController {
         return total + product.product.price * product.quantity;
       }, 0);
 
-      console.log("Total Amount calculado:", totalAmount);
-
       const ticketData = {
         code: uuidv4(),
         purchase_datetime: new Date(),
@@ -165,12 +163,9 @@ class CartController {
         purchaser: req.user.email,
       };
 
-      console.log("Ticket Data justo antes de crear el ticket:", ticketData);
       const ticketCreated = await ticketController.createTicket({
         body: ticketData,
       });
-      console.log("Ticket Creado:", ticketCreated);
-
       res.json({
         status: "success",
         message: "Compra realizada con éxito",

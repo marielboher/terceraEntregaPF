@@ -7,13 +7,11 @@ class TicketController {
 
   async createTicket(req) {
     try {
-        console.log("Datos recibidos en req.body:", req.body);
 
         const data = req.body;
         const ticket = await this.ticketService.createTicket(data);
 
         if (ticket) {
-            console.log("Ticket creado", ticket); 
             return ticket;  
         } else {
             throw new Error("Error al crear el ticket");

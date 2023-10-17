@@ -20,6 +20,7 @@ import cors from "cors";
 import DBManager from './src/mongo/ds.js';
 import { SECRET_KEY_SESSION, PORT } from "./src/config/config.js";
 import emailRouter from "./src/routes/email.routes.js";
+import smsRouter from "./src/routes/sms.routes.js";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -75,6 +76,7 @@ app.use("/", viewsRouter);
 app.use("/api/sessions/", sessionsRouter);
 app.use("/", viewsRouter);
 app.use('/email', emailRouter);
+app.use('/sms', smsRouter);
 
 
 const PM = new ProductManager();
