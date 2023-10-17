@@ -4,46 +4,48 @@ import UserDTO from "./dto/user.dto.js";
 
 
 class UserManager {
-  async addUser({ first_name, last_name, email, age, password, role }) {
-    try {
-      const existingUser = await userModel.findOne({ email });
-  
-      if (existingUser) {
-        console.log("User already exists");
-        return null;
+    async addUser({ first_name, last_name, email, age, password, role }) { 
+      try {
+        const existingUser = await userModel.findOne({ email });
+    
+        if (existingUser) {
+          console.log("User already exists");
+          return null;
+        }
+    
+        const hashedPassword = createHash(password);
+        const user = await userModel.create({
+          first_name,
+          last_name,
+          email,
+          age,
+          password: hashedPassword,
+          role  
+        });
+    
+        console.log("User added!", user);
+        return user;
+      } catch (error) {
+        console.error("Error adding user:", error);
+        throw error;
       }
+    }
+    async login(user, pass) {
+      try {
+        const userLogged = await userModel.findOne({ email: user });
   
-      const hashedPassword = createHash(password);
-      const user = await userModel.create({
-        first_name,
-        last_name,
-        email,
-        age,
-        password: hashedPassword,
-        role  
-      });
+        if (userLogged && isValidPassword(userLogged, pass)) {
+          const role =
+            userLogged.email === "adminCoder@coder.com" ? "admin" : "usuario";
   
-      console.log("User added!", user);
-      return new UserDTO(user); 
-    } catch (error) {
-      console.error("Error adding user:", error);
-      throw error;
+          return userLogged;
+        }
+        return null;
+      } catch (error) {
+        console.error("Error durante el login:", error);
+        throw error;
+      }
     }
-  }
-  async login(user, pass) {
-    try {
-      const userLogged = await userModel.findOne({ email: user });
-
-      if (userLogged && isValidPassword(userLogged, pass)) {
-        return new UserDTO(userLogged); 
-    }
-      return null;
-    } catch (error) {
-      console.error("Error during login:", error);
-      throw error;
-    }
-  }
-
   async restorePassword(email, hashedPassword) {
     try {
       const user = await userModel.findOne({ email });

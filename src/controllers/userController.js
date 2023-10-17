@@ -1,5 +1,4 @@
 import UserService from "../services/userServices.js";
-import UserDTO from "../dao/dto/user.dto.js";
 import UserRespose from "../dao/dto/user.response.dto.js";
 
 class UserController {
@@ -18,11 +17,12 @@ class UserController {
       role,
     });
 
-    return res
-      .status(response.status === "success" ? 200 : 400)
-      .json(response.user);
+    return res.status(response.status === "success" ? 200 : 400).json({
+      status: response.status,
+      data: response.user,
+      redirect: response.redirect,
+    });
   }
-
   async restorePassword(req, res) {
     const { user, pass } = req.query;
     try {
