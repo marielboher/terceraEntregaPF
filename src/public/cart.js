@@ -69,8 +69,8 @@ async function realizarCompra() {
       throw new Error("Carrito no encontrado");
     }
 
-    const url = `/api/carts/${cartId}/purchase`; // URL corregida
-    console.log("URL de compra:", url); // Log de la URL para verificar
+    const url = `/api/carts/${cartId}/purchase`; 
+    console.log("URL de compra:", url); 
 
     const response = await fetch(url, {
       method: "POST",
